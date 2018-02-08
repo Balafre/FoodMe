@@ -1,0 +1,515 @@
+<!-----------------------------------------------Breadcrumbs----------------------------------------------------------->
+<div class="breadcrumb-wrapper">
+    <h4 class="mainTitle no-margin" translate="sidebar.nav.add_menu.MAIN"> Add Menu </h4>
+    <div ncy-breadcrumb class="pull-right"></div>
+</div>
+<!---------------------------------------------------Start------------------------------------------------------------->
+<div ng-controller="AddMenu">
+    <div ng-controller="ModalLoginCtrl">
+<!--------------------------------------------------Buttons------------------------------------------------------------>
+        <div class="container-fluid"><!--ng-controller="homepage"-->
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-info header-button sign-in-restaurant-button" ng-click="open('lg', 'modalPopup.html', 'login')">Sign In</button>
+            </a>
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-primary header-button get-started-button" ng-click="changeModal();open('lg', 'modalPopup.html', 'registration')">Get started</button>
+            </a>
+            <div class="header-greeting" ng-show="validate" ng-class="{hide:!validate}">Hi {{loggedUser}}</div>
+        </div>
+<!----------------------------------------------------Modal------------------------------------------------------------>
+        <div class="container-fluid ">
+            <script type="text/ng-template" id="modalPopup.html">
+                <button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+<!--------------------------------------------------Sign In------------------------------------------------------------>
+                <div ng-show="currentPage === 'login'" ng-class="{hide:currentPage !== 'login'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Sign in with your FoodMe account</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form name="FormLogin" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group" ng-class="{'has-error':FormLogin.loginEmail.$dirty && FormLogin.loginEmail.$invalid, 'has-success':FormLogin.loginEmail.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.loginEmail" type="text" name="loginEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="FormLogin.loginEmail.$dirty && FormLogin.loginEmail.$invalid">Email name is required</span>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error':FormLogin.loginPassword.$dirty && FormLogin.loginPassword.$invalid, 'has-success':FormLogin.loginPassword.$valid}">
+                                        <label class="control-label"> Password <span class="symbol required"></span> </label>
+                                        <a class="label-link" ng-click="changeModal(FormLogin, 'updatePassword');clearModal()">Forgot password?</a>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.loginPassword" type="password" name="loginPassword" class="form-control" placeholder="Your password" ng-minlength="6" ng-maxlength="12" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-show="(FormLogin.loginPassword.$error.minlength || FormLogin.loginPassword.$error.maxlength) && FormLogin.loginPassword.$dirty">Passwords must be between 6 and 12 characters.</span>
+                                        <span  class="error text-small block"ng-show="!FormLogin.loginPassword.$error.minlength && !FormLogin.loginPassword.$error.maxlength && FormLogin.loginPassword.$error.pattern && FormLogin.loginPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                                        <span class="error text-small block" ng-if="FormLogin.loginPassword.$dirty && FormLogin.loginPassword.$invalid">Password is required</span>
+                                    </div>
+                                    <button class="btn btn-info" type="submit" ng-click="send(FormLogin)">Sign in</button>
+                                    <button class="btn btn-primary" ng-click="fbLogin()"><i class="fa fa-facebook"></i> &nbsp Sign in with Facebook</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                            <div class="incorrect-login-message" ng-show="errorMessage" ng-class="{hide:!errorMessage}">Your Email or password are not correct!</div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-bottom-line">
+                            Don't have an account? <a ng-click="changeModal(FormLogin, 'registration');clearModal()">Create Your Account</a>
+                        </div>
+                    </div>
+                </div>
+<!----------------------------------------------Update Password-------------------------------------------------------->
+                <div ng-show="currentPage === 'updatePassword'" ng-class="{hide:currentPage !== 'updatePassword'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Can't get in?</h3>
+                        <p>Not a problem. Enter your email address below and we'll send you a link to reset your password.</p>
+                    </div>
+                    <div class="modal-body">
+                        <form name="FormResendPassword" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group" ng-class="{'has-error':FormResendPassword.recoverPasswordEmail.$dirty && FormResendPassword.recoverPasswordEmail.$invalid, 'has-success':FormResendPassword.recoverPasswordEmail.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.recoverPasswordEmail" type="text" name="recoverPasswordEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="FormResendPassword.recoverPasswordEmail.$dirty && FormResendPassword.recoverPasswordEmail.$invalid">Email name is required</span>
+                                    </div>
+                                    <button class="btn btn-danger" type="submit" ng-click="send(FormResendPassword)">Submit</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+<!------------------------------------------------Get Started---------------------------------------------------------->
+                <div ng-show="currentPage === 'registration'" ng-class="{hide:currentPage !== 'registration'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Get started with FoodMe</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div class="modal-body">
+                        <form name="Form" class="form-group" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="row">
+                                        <div class="col-lg6 col-md-6 col-sm-12 col-xs-12 padding-left-30 padding-right-15">
+                                            <div class="form-group" ng-class="{'has-error':Form.firstName.$dirty && Form.firstName.$invalid, 'has-success':Form.firstName.$valid}">
+                                                <label class="control-label"> First Name <span class="symbol required"></span> </label>
+                                                <input ng-model="modalPopup.firstName" type="text" name="firstName" class="form-control" placeholder="First Name" ng-pattern="/^([A-Za-z\s'-]{2,})$/" required>
+                                                <span class="error text-small block" ng-if="Form.firstName.$dirty && Form.firstName.$invalid">First Name name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.restaurantName.$dirty && Form.restaurantName.$invalid, 'has-success':Form.restaurantName.$valid}">
+                                                <label class="control-label"> Restaurant Name <span class="symbol required"></span> </label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-cutlery"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.restaurantName" type="text" name="restaurantName" class="form-control" placeholder="Restaurant Name" ng-pattern="/^([A-Za-z0-9&\s'-]{2,})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.restaurantName.$dirty && Form.restaurantName.$invalid">Restaurant Name name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.userEmail.$dirty && Form.userEmail.$invalid, 'has-success':Form.userEmail.$valid}">
+                                                <label class="control-label"> Email <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-envelope"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.email" type="text" name="userEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.userEmail.$dirty && Form.userEmail.$invalid">Email name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.phone.$dirty && Form.phone.$invalid, 'has-success':Form.phone.$valid}">
+                                                <label class="control-label"> Phone <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-phone"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.phone" name="phone" type="text" class="form-control" placeholder="Your Phone" ng-pattern="/^(\+?[0-9-\s\(\)]{6,16})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.phone.$dirty && Form.phone.$invalid">Phone is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.userPassword.$dirty && Form.userPassword.$invalid, 'has-success':Form.userPassword.$valid}">
+                                                <label class="control-label"> Password <span class="symbol required"></span> </label>
+                                                <a class="label-link" ng-click="cancel()">Forgot password?</a>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-key"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.password" type="password" name="userPassword" class="form-control" placeholder="Your password" ng-minlength="6" ng-maxlength="12" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-show="(Form.userPassword.$error.minlength || Form.userPassword.$error.maxlength) && Form.userPassword.$dirty">Passwords must be between 6 and 12 characters.</span>
+                                                <span  class="error text-small block"ng-show="!Form.userPassword.$error.minlength && !Form.userPassword.$error.maxlength && Form.userPassword.$error.pattern && Form.userPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                                                <span class="error text-small block" ng-if="Form.userPassword.$dirty && Form.userPassword.$invalid">Password required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg6 col-md-6 col-sm-12 col-xs-12 padding-left-15 padding-right-30">
+                                            <div class="form-group" ng-class="{'has-error':Form.lastName.$dirty && Form.lastName.$invalid, 'has-success':Form.lastName.$valid}">
+                                                <label class="control-label"> Last Name <span class="symbol required"></span> </label>
+                                                <input ng-model="modalPopup.lastName" type="text" name="lastName" class="form-control" placeholder="Your last name" ng-pattern="/^([A-Za-z\s'-]{2,})$/" required>
+                                                <span class="error text-small block" ng-if="Form.lastName.$dirty && Form.lastName.$invalid">Last Name name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.address.$dirty && Form.address.$invalid, 'has-success':Form.address.$valid}">
+                                                <label class="control-label"> Address <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-home"></i>
+                                                    </div>
+                                                    <input name="address" ng-model="modalPopup.address" type="text" class="form-control" placeholder="Your address" ng-pattern="/^([A-Za-z0-9'-\s\.\(\),/]{2,})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.address.$dirty && Form.address.$invalid">Address is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.zip.$dirty && Form.zip.$invalid, 'has-success':Form.zip.$valid}">
+                                                <label class="control-label"> Zip <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-clipboard"></i> <!--envelope-o-->
+                                                    </div>
+                                                    <input name="zip" ng-model="modalPopup.zip" type="text" class="form-control" placeholder="Zip code" ng-pattern="/^([0-9]{6})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.zip.$dirty && Form.zip.$invalid">Zip code is required (6 figures)</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.userPassword.$dirty && (Form.userPassword.$invalid || (Form.userPassword.$valid && (Form.confirmPassword.$error.noMatch || Form.confirmPassword.$invalid || Form.confirmPassword.$pristine))), 'has-success':!Form.confirmPassword.$error.noMatch && Form.userPassword.$valid && ((Form.confirmPassword.$dirty && Form.userPassword.$dirty) || (Form.confirmPassword.$valid && !Form.userPassword.$dirty)) }"> <!--Form.confirmPassword.$dirty && !Form.confirmPassword.$pristine-->
+                                                <label class="control-label"> Repeat Password <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-key"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Repeat Password" valid-confirm-password required>
+                                                </div>
+                                                <span class="text-small block reminder" ng-show="(Form.confirmPassword.$error.noMatch && !Form.confirmPassword.$dirty) || (Form.confirmPassword.$dirty && Form.confirmPassword.$invalid)">Please confirm your password.</span>
+                                                <span class="error text-small block" ng-show="Form.confirmPassword.$error.noMatch && Form.userPassword.$dirty">Passwords do not match.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-info" type="submit" ng-click="send(Form)">Create your account</button>
+                                    <button class="btn btn-primary" ng-click="fbLogin()"><i class="fa fa-facebook"></i> &nbsp Sign in with Facebook</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-bottom-line">
+                            Already have an account? <a ng-click="changeModal(Form, 'login');clearModal()">Log in now</a>
+                        </div>
+                    </div>
+                </div>
+<!-----------------------------------------------Notification---------------------------------------------------------->
+                <div ng-show="currentPage === 'registeredMessage'" ng-class="{hide:currentPage !== 'registeredMessage'}" class="registration-message-modal">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Thank you for your choice?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="modal-title">You was successfully registered. Please confirm your registration by following your email address.</h4>
+                    </div>
+                </div>
+
+            </script>
+        </div>
+<!---------------------------------------------Modal create menu------------------------------------------------------->
+        <div class="container-fluid ">
+            <script type="text/ng-template" id="modalCreateMenu.html">
+                <button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+<!-------------------------------------------------Add menu------------------------------------------------------------>
+                <div>
+                    <div class="modal-header">
+                        <h3 class="modal-title">New Menu</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form name="FormNewMenu" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group"  ng-class="{'has-error':FormNewMenu.menuName.$dirty && FormNewMenu.menuName.$invalid, 'has-success':FormNewMenu.menuName.$valid}">
+                                        <label class="control-label"> Enter Menu Name <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-book"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.newMenuName" name="menuName" type="text" class="form-control" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="FormNewMenu.menuName.$dirty && FormNewMenu.menuName.$invalid">Please, enter the menu name</span>
+                                     </div>
+                                    <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+                                    <button class="btn btn-info" type="submit" ng-click="send(FormNewMenu)">Add Menu</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </script>
+        </div>
+<!----------------------------------------------------Page------------------------------------------------------------->
+        <div class="container-fluid"> <!--ng-init="init()"-->
+            <form name="Form" novalidate>
+                <div class="row padding-right-30 padding-left-30">
+                    <h1 ng-click="check()">My Menus</h1>
+                    <p>Manage your menus</p>
+                </div>
+                <div class="row" ng-class="{'hide':currentMenu !== ''}">
+                    <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12 padding-right-30 padding-left-30">
+                        <div class="first-block">
+                            <h1>You Have No Menus</h1>
+                            <button class="btn btn-info" type="submit" ng-click="open('lg', 'modalCreateMenu.html', 'addingMenu')">Add menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" ng-repeat="a in menus" ng-class="{'hide':a.id !== currentMenu}">
+                    <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12 padding-right-30 padding-left-30">
+
+                        <div class="panel panel-white">
+                            <div class="panel-body menu-main-block" ng-class="{'hide':a.edit}"  ng-mouseenter="active = true" ng-mouseleave="active = false">
+                                <h1>{{a.name}}</h1>
+                                <p>{{a.description}}</p>
+                                <div class="menu-icons" ng-class="{'hide':!active}">
+                                    <ul>
+                                        <li class="fa fa-chevron-up collapse-expand-menu-icon" ng-click="expandCollapseAllSections(a, 'collapse')" uib-tooltip="Collapse" tooltip-placement="top" ng-class="{'hide':a.collapsed}"></li>
+                                        <li class="fa fa-chevron-down collapse-expand-menu-icon" ng-click="expandCollapseAllSections(a, 'expand')" uib-tooltip="Expand" tooltip-placement="top" ng-class="{'hide':!a.collapsed}"></li>
+                                        <li class="fa fa-trash-o delete-menu-icon" ng-click="deleteAction(a, 'menu')" uib-tooltip="Delete" tooltip-placement="top"></li>
+                                        <li class="fa fa-pencil edit-menu-icon" ng-click="editAction(a)" uib-tooltip="Edit" tooltip-placement="top"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body menu-main-block" ng-class="{'hide':!a.edit}">
+                                <form name="Form" novalidate>
+                                    <div class="row">
+                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                <input ng-model="a.name" name="name" type="text">
+                                            </div>
+                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                <textarea ng-model="a.description" name="description" rows="2" ></textarea>
+                                            </div>
+                                    </div>
+                                    <div class="menu-icons">
+                                        <ul>
+                                            <li class="fa fa-times close-menu-icon" ng-click="closeSaving(a)"></li>
+                                            <li class="fa fa-check save-menu-icon" ng-click="saveChanges(a, 'menu')"></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div ng-repeat="x in a.menuSections" on-finish-render="ngRepeatFinished" class="section">
+                            <div class="panel panel-blue section-panel">
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <ul class="section-adding-photo" ng-mouseenter="showPlus(x)" ng-mouseleave="showPhoto(x)">
+                                            <li class="fa fa-camera camera-photo" ng-class="{'hide':x.addPhoto !== 'photo'}"></li>
+                                            <li ng-class="{'hide':x.addPhoto !== 'plus'}">
+                                                <label class="fa fa-plus plus-photo" ng-mouseover="attachEventOnSection(a, x)">
+                                                    <input type="file" class="sectionImgInput">
+                                                </label>
+                                            </li>
+
+                                            <li ng-class="{'hide':x.addPhoto !== 'image'}">
+                                                <div class="section-img">
+                                                    <div ng-style="{ 'background-image': 'url(' + x.menuSectionPictureUrl + ')' }">
+                                                        <!--<img ng-src="{{x.photo}}" >-->
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li ng-class="{'hide':x.editDeletePhoto !== true || x.addPhoto !== 'image'}">
+                                                <ul class="section-image-icon">
+                                                    <li class="fa fa-trash-o delete-section-image-icon" ng-click="deletePhoto(x, 'menusection')"></li>
+                                                    <!--<li class="edit-section-image-icon">
+                                                        <label class="fa fa-pencil edit-section-label" ng-mouseover="attachEventOnSection(x, 'reload')">
+                                                            <input type="file" class="sectionImgInput">
+                                                        </label>
+                                                    </li>-->
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                        <div class="panel-body menu-section-block" ng-class="{'hide':x.edit}"  ng-mouseenter="x.active = true" ng-mouseleave="x.active = false">
+                                            <h1>{{x.name}}</h1>
+                                            <p>{{x.description}}</p>
+                                            <div class="section-icons" ng-class="{'hide':!x.active}">
+                                                <ul>
+                                                    <li class="fa fa-chevron-up collapse-section-icon" uib-tooltip="Collapse" tooltip-placement="top" ng-click="expandCollapseSection(a, x, 'collapse')" ng-class="{'hide':x.collapsed}"></li>
+                                                    <li class="fa fa-chevron-down expand-section-icon" uib-tooltip="Expand" tooltip-placement="top" ng-click="expandCollapseSection(a, x, 'expand')" ng-class="{'hide':!x.collapsed}"></li>
+                                                    <li class="fa fa-trash-o delete-section-icon" ng-click="deleteAction(x, 'menusection')" uib-tooltip="Delete" tooltip-placement="top"></li>
+                                                    <li class="fa fa-pencil edit-section-icon" ng-click="editAction(x)" uib-tooltip="Edit" tooltip-placement="top"></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body menu-section-block" ng-class="{'hide':!x.edit}">
+                                            <form name="Form" novalidate>
+                                                <div class="row">
+                                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                        <input ng-model="x.name" name="name" type="text">
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                        <textarea ng-model="x.description" name="description" rows="2" ></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="section-icons">
+                                                    <ul>
+                                                        <li class="fa fa-times close-section-icon" ng-click="closeSaving(x)"></li>
+                                                        <li class="fa fa-check save-section-icon" ng-click="saveChanges(x, 'menusection')"></li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div ng-repeat="y in x.dishes"  ng-class="{'hide':x.collapsed}">
+                                <div class="panel panel-white dish-panel">
+                                    <div class="row">
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                            <ul class="dish-adding-photo" ng-mouseenter="showPlus(y)" ng-mouseleave="showPhoto(y)">
+                                                <li class="fa fa-camera camera-photo" ng-class="{'hide':y.addPhoto !== 'photo'}"></li>
+                                                <li ng-class="{'hide':y.addPhoto !== 'plus'}">
+                                                    <label class="fa fa-plus plus-photo" ng-mouseover="attachEventOnDish(a, x, y)">
+                                                        <input type="file" class="dishImgInput">
+                                                    </label>
+                                                </li>
+
+                                                <li ng-class="{'hide':y.addPhoto !== 'image'}">
+                                                    <div class="section-img">
+                                                        <div ng-style="{ 'background-image': 'url(' + y.dishPictureUrl + ')' }">
+                                                            <!--<img ng-src="{{x.photo}}" >-->
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li ng-class="{'hide':y.editDeletePhoto !== true || y.addPhoto !== 'image'}">
+                                                    <ul class="dish-image-icon">
+                                                        <li class="fa fa-trash-o delete-dish-image-icon" ng-click="deletePhoto(y, 'dish')"></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                            <div class="panel-body menu-dish-block" ng-class="{'hide':y.edit}"  ng-mouseenter="y.active = true" ng-mouseleave="y.active = false">
+                                                <h1>{{y.name}} / {{y.price}}&nbsp{{restaurantCurrency}}</h1>
+                                                <p>{{y.description}}</p>
+                                                <div class="dish-icons" ng-class="{'hide':!y.active}">
+                                                    <ul>
+                                                        <li class="fa fa-star special-dish-section-icon" uib-tooltip="Special Dish" tooltip-placement="top"></li> <!-- <i class="fa fa-chevron-down"></i> -->
+                                                        <li class="fa fa-trash-o delete-section-icon" ng-click="deleteAction(y, 'dish')" uib-tooltip="Delete" tooltip-placement="top"></li>
+                                                        <li class="fa fa-pencil edit-section-icon" ng-click="editAction(y)" uib-tooltip="Edit" tooltip-placement="top"></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body menu-section-block" ng-class="{'hide':!y.edit}">
+                                                <form name="Form" novalidate>
+                                                    <div class="row">
+                                                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                                            <input ng-model="y.name" name="name" type="text">
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 padding-left-5 padding-right-0">
+                                                            <input ng-model="y.price" name="price" type="number">
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 padding-right-0">
+                                                            <textarea ng-model="y.description" name="description" rows="2" ></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dish-icons">
+                                                        <ul>
+                                                            <li class="fa fa-times close-section-icon" ng-click="closeSaving(y)"></li>
+                                                            <li class="fa fa-check save-section-icon" ng-click="saveChanges(y, 'dish')"></li>
+                                                        </ul>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-white new-dish" ng-class="{'hide':x.collapsed}">
+                                <div class="panel-body new-dish-button" ng-click="addNewDish(x)">
+                                    <h3><i class="fa fa-plus"></i>&nbsp New Dish</h3>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="panel panel-white">
+                            <div class="panel-body new-section-button" ng-click="addNewSection(a)">
+                                <i class="fa fa-plus-circle"></i>
+                                <h3>New Section</h3>
+                            </div>
+                        </div>
+                        <!--<div class="panel panel-white">
+                            <div class="panel-body">
+
+                                <label class="fa fa-plus plus-photo">
+                                    <input type="file" class="sectionImg">
+                                </label>
+
+                                <div class="cropBox croppedBox section-img">
+                                    <div>
+                                        <img ng-src="{{myImage}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <!--
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <button type="submit"  class="btn btn-btn-default submit-button" ngf-select="uploadFiles($files)">Upload</button>
+
+                                <div class="form_line">
+                                    <div class="form_controls">
+                                        <div class="preview">
+                                            <img ngf-src="file.result.url || file">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        -->
+
+
+
+                        <!--<div class="panel panel-white">
+                            <div class="panel-body">
+                                <button type="submit"  class="btn btn-btn-default submit-button" ng-click="cancelFunctionality()">Cancel</button>
+                                <button type="submit"  class="btn btn-info submit-button" ng-click="addNewRestaurantObject(Form)">Save</button>
+                            </div>
+                        </div>-->
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--
+                            <a ui-sref="app.pages.candidatelist" ng-show="newCandidateData.editMode" ng-class="{hide:!newCandidateData.editMode}">
+                                <button ng-click="setEmptyCandidateData()" class="btn btn-btn-default pull-right margin-top-20 margin-right-20">Cancel</button>
+                            </a>
+                            -->
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+    </div>
+</div>

@@ -1,0 +1,447 @@
+<!--------------------------------------------------Breadcrumbs-------------------------------------------------------->
+<div class="breadcrumb-wrapper">
+    <h4 class="mainTitle no-margin" translate="sidebar.nav.add_restaurant.MAIN"> Add Restaurant </h4>
+    <div ncy-breadcrumb class="pull-right"></div>
+</div>
+<!-----------------------------------------------------Start----------------------------------------------------------->
+<div ng-controller="AddRestaurant">
+    <div ng-controller="ModalLoginCtrl">
+<!----------------------------------------------------Buttons---------------------------------------------------------->
+        <div class="container-fluid">
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-info header-button sign-in-restaurant-button" ng-click="open('lg', 'modalPopup.html', 'login')">Sign In</button>
+            </a>
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-primary header-button get-started-button" ng-click="changeModal();open('lg', 'modalPopup.html', 'registration')">Get started</button>
+            </a>
+            <div class="header-greeting" ng-show="validate" ng-class="{hide:!validate}">Hi {{loggedUser}}</div>
+        </div>
+<!----------------------------------------------------Modal------------------------------------------------------------>
+        <div class="container-fluid ">
+            <script type="text/ng-template" id="modalPopup.html">
+                <button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+<!--------------------------------------------------Sign In------------------------------------------------------------>
+                <div ng-show="currentPage === 'login'" ng-class="{hide:currentPage !== 'login'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Sign in with your FoodMe account</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form name="FormLogin" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group" ng-class="{'has-error':FormLogin.loginEmail.$dirty && FormLogin.loginEmail.$invalid, 'has-success':FormLogin.loginEmail.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.loginEmail" type="text" name="loginEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="FormLogin.loginEmail.$dirty && FormLogin.loginEmail.$invalid">Email name is required</span>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error':FormLogin.loginPassword.$dirty && FormLogin.loginPassword.$invalid, 'has-success':FormLogin.loginPassword.$valid}">
+                                        <label class="control-label"> Password <span class="symbol required"></span> </label>
+                                        <a class="label-link" ng-click="changeModal(FormLogin, 'updatePassword');clearModal()">Forgot password?</a>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.loginPassword" type="password" name="loginPassword" class="form-control" placeholder="Your password" ng-minlength="6" ng-maxlength="12" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-show="(FormLogin.loginPassword.$error.minlength || FormLogin.loginPassword.$error.maxlength) && FormLogin.loginPassword.$dirty">Passwords must be between 6 and 12 characters.</span>
+                                        <span  class="error text-small block"ng-show="!FormLogin.loginPassword.$error.minlength && !FormLogin.loginPassword.$error.maxlength && FormLogin.loginPassword.$error.pattern && FormLogin.loginPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                                        <span class="error text-small block" ng-if="FormLogin.loginPassword.$dirty && FormLogin.loginPassword.$invalid">Password is required</span>
+                                    </div>
+                                    <button class="btn btn-info" type="submit" ng-click="send(FormLogin)">Sign in</button>
+                                    <button class="btn btn-primary" ng-click="fbLogin()"><i class="fa fa-facebook"></i> &nbsp Sign in with Facebook</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                            <div class="incorrect-login-message" ng-show="errorMessage" ng-class="{hide:!errorMessage}">Your Email or password are not correct!</div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-bottom-line">
+                            Don't have an account? <a ng-click="changeModal(FormLogin, 'registration');clearModal()">Create Your Account</a>
+                        </div>
+                    </div>
+                </div>
+<!----------------------------------------------Update Password-------------------------------------------------------->
+                <div ng-show="currentPage === 'updatePassword'" ng-class="{hide:currentPage !== 'updatePassword'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Can't get in?</h3>
+                        <p>Not a problem. Enter your email address below and we'll send you a link to reset your password.</p>
+                    </div>
+                    <div class="modal-body">
+                        <form name="FormResendPassword" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group" ng-class="{'has-error':FormResendPassword.recoverPasswordEmail.$dirty && FormResendPassword.recoverPasswordEmail.$invalid, 'has-success':FormResendPassword.recoverPasswordEmail.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.recoverPasswordEmail" type="text" name="recoverPasswordEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="FormResendPassword.recoverPasswordEmail.$dirty && FormResendPassword.recoverPasswordEmail.$invalid">Email name is required</span>
+                                    </div>
+                                    <button class="btn btn-danger" type="submit" ng-click="send(FormResendPassword)">Submit</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+<!------------------------------------------------Get Started---------------------------------------------------------->
+                <div ng-show="currentPage === 'registration'" ng-class="{hide:currentPage !== 'registration'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Get started with FoodMe</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div class="modal-body">
+                        <form name="Form" class="form-group" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="row">
+                                        <div class="col-lg6 col-md-6 col-sm-12 col-xs-12 padding-left-30 padding-right-15">
+                                            <div class="form-group" ng-class="{'has-error':Form.firstName.$dirty && Form.firstName.$invalid, 'has-success':Form.firstName.$valid}">
+                                                <label class="control-label"> First Name <span class="symbol required"></span> </label>
+                                                <input ng-model="modalPopup.firstName" type="text" name="firstName" class="form-control" placeholder="First Name" ng-pattern="/^([A-Za-z\s'-]{2,})$/" required>
+                                                <span class="error text-small block" ng-if="Form.firstName.$dirty && Form.firstName.$invalid">First Name name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.restaurantName.$dirty && Form.restaurantName.$invalid, 'has-success':Form.restaurantName.$valid}">
+                                                <label class="control-label"> Restaurant Name <span class="symbol required"></span> </label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-cutlery"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.restaurantName" type="text" name="restaurantName" class="form-control" placeholder="Restaurant Name" ng-pattern="/^([A-Za-z0-9&\s'-]{2,})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.restaurantName.$dirty && Form.restaurantName.$invalid">Restaurant Name name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.userEmail.$dirty && Form.userEmail.$invalid, 'has-success':Form.userEmail.$valid}">
+                                                <label class="control-label"> Email <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-envelope"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.email" type="text" name="userEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.userEmail.$dirty && Form.userEmail.$invalid">Email name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.phone.$dirty && Form.phone.$invalid, 'has-success':Form.phone.$valid}">
+                                                <label class="control-label"> Phone <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-phone"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.phone" name="phone" type="text" class="form-control" placeholder="Your Phone" ng-pattern="/^(\+?[0-9-\s\(\)]{6,16})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.phone.$dirty && Form.phone.$invalid">Phone is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.userPassword.$dirty && Form.userPassword.$invalid, 'has-success':Form.userPassword.$valid}">
+                                                <label class="control-label"> Password <span class="symbol required"></span> </label>
+                                                <a class="label-link" ng-click="cancel()">Forgot password?</a>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-key"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.password" type="password" name="userPassword" class="form-control" placeholder="Your password" ng-minlength="6" ng-maxlength="12" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-show="(Form.userPassword.$error.minlength || Form.userPassword.$error.maxlength) && Form.userPassword.$dirty">Passwords must be between 6 and 12 characters.</span>
+                                                <span  class="error text-small block"ng-show="!Form.userPassword.$error.minlength && !Form.userPassword.$error.maxlength && Form.userPassword.$error.pattern && Form.userPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                                                <span class="error text-small block" ng-if="Form.userPassword.$dirty && Form.userPassword.$invalid">Password required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg6 col-md-6 col-sm-12 col-xs-12 padding-left-15 padding-right-30">
+                                            <div class="form-group" ng-class="{'has-error':Form.lastName.$dirty && Form.lastName.$invalid, 'has-success':Form.lastName.$valid}">
+                                                <label class="control-label"> Last Name <span class="symbol required"></span> </label>
+                                                <input ng-model="modalPopup.lastName" type="text" name="lastName" class="form-control" placeholder="Your last name" ng-pattern="/^([A-Za-z\s'-]{2,})$/" required>
+                                                <span class="error text-small block" ng-if="Form.lastName.$dirty && Form.lastName.$invalid">Last Name name is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.address.$dirty && Form.address.$invalid, 'has-success':Form.address.$valid}">
+                                                <label class="control-label"> Address <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-home"></i>
+                                                    </div>
+                                                    <input name="address" ng-model="modalPopup.address" type="text" class="form-control" placeholder="Your address" ng-pattern="/^([A-Za-z0-9'-\s\.\(\),/]{2,})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.address.$dirty && Form.address.$invalid">Address is required</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.zip.$dirty && Form.zip.$invalid, 'has-success':Form.zip.$valid}">
+                                                <label class="control-label"> Zip <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-clipboard"></i> <!--envelope-o-->
+                                                    </div>
+                                                    <input name="zip" ng-model="modalPopup.zip" type="text" class="form-control" placeholder="Zip code" ng-pattern="/^([0-9]{6})$/" required>
+                                                </div>
+                                                <span class="error text-small block" ng-if="Form.zip.$dirty && Form.zip.$invalid">Zip code is required (6 figures)</span>
+                                            </div>
+                                            <div class="form-group" ng-class="{'has-error':Form.userPassword.$dirty && (Form.userPassword.$invalid || (Form.userPassword.$valid && (Form.confirmPassword.$error.noMatch || Form.confirmPassword.$invalid || Form.confirmPassword.$pristine))), 'has-success':!Form.confirmPassword.$error.noMatch && Form.userPassword.$valid && ((Form.confirmPassword.$dirty && Form.userPassword.$dirty) || (Form.confirmPassword.$valid && !Form.userPassword.$dirty)) }"> <!--Form.confirmPassword.$dirty && !Form.confirmPassword.$pristine-->
+                                                <label class="control-label"> Repeat Password <span class="symbol required"></span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-key"></i>
+                                                    </div>
+                                                    <input ng-model="modalPopup.confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Repeat Password" valid-confirm-password required>
+                                                </div>
+                                                <span class="text-small block reminder" ng-show="(Form.confirmPassword.$error.noMatch && !Form.confirmPassword.$dirty) || (Form.confirmPassword.$dirty && Form.confirmPassword.$invalid)">Please confirm your password.</span>
+                                                <span class="error text-small block" ng-show="Form.confirmPassword.$error.noMatch && Form.userPassword.$dirty">Passwords do not match.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-info" type="submit" ng-click="send(Form)">Create your account</button>
+                                    <button class="btn btn-primary" ng-click="fbLogin()"><i class="fa fa-facebook"></i> &nbsp Sign in with Facebook</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-bottom-line">
+                            Already have an account? <a ng-click="changeModal(Form, 'login');clearModal()">Log in now</a>
+                        </div>
+                    </div>
+                </div>
+<!-----------------------------------------------Notification---------------------------------------------------------->
+                <div ng-show="currentPage === 'registeredMessage'" ng-class="{hide:currentPage !== 'registeredMessage'}" class="registration-message-modal">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Thank you for your choice?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="modal-title">You was successfully registered. Please confirm your registration by following your email address.</h4>
+                    </div>
+                </div>
+
+            </script>
+        </div>
+
+<!----------------------------------------------------Page------------------------------------------------------------->
+        <div class="container-fluid">
+            <form name="Form" novalidate>
+                <div class="row padding-right-30 padding-left-30">
+                    <h1>Settings</h1>
+                    <p>List your address, opening hours and contact info.</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12 padding-right-30 padding-left-30">
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <legend><h4>Restaurant Info</h4></legend>
+                                <p>Tell people your name and what you offer</p>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group" ng-class="{'has-error':Form.restaurantName.$dirty && Form.restaurantName.$invalid, 'has-success':Form.restaurantName.$valid}">
+                                            <label class="control-label"> Name <span class="symbol required"></span></label>
+                                            <input ng-model="restaurantData.name" type="text" name="restaurantName" class="form-control" placeholder="Restaurant1" ng-pattern="/^([A-Za-z0-9&\s'-]{2,})$/" required>
+                                            <span class="error text-small block" ng-if="Form.restaurantName.$dirty && Form.restaurantName.$invalid">Restaurant Name is required</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>Short Description (150 chars)</label>
+                                            <textarea ng-model="restaurantData.description" ng-change="lengthControl()" name="description"  placeholder="eg. French Mexican Homemade Cooking" class="form-control" rows="1" ></textarea>
+                                            <span class="text-small block" > Tell the world what makes your restaurant special</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <legend><h4>Contact Info</h4></legend>
+                                <p>List your contact info so people can get in touch</p>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group" ng-class="{'has-error':Form.phone.$dirty && Form.phone.$invalid, 'has-success':Form.phone.$valid}">
+                                            <label class="control-label"> Phone <span class="symbol required"></span></label>
+                                            <input ng-model="restaurantData.phoneNumber" name="phone" type="text" class="form-control" placeholder="Your Phone" ng-pattern="/^(\+?[0-9-\s\(\)]{6,16})$/" required>
+                                            <span class="error text-small block" ng-if="Form.phone.$dirty && Form.phone.$invalid">Phone is required</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group" ng-class="{'has-error':Form.fax.$dirty && Form.fax.$invalid, 'has-success':Form.fax.$valid}">
+                                            <label class="control-label"> Fax <span class="symbol required"></span></label>
+                                            <input ng-model="restaurantData.faxNumber" name="fax" type="text" class="form-control" placeholder="Your Fax" ng-pattern="/^(\+?[0-9-\s\(\)]{6,16})$/" required>
+                                            <span class="error text-small block" ng-if="Form.fax.$dirty && Form.fax.$invalid">Fax is required</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group" ng-class="{'has-error':Form.email.$dirty && Form.email.$invalid, 'has-success':Form.email.$valid}">
+                                            <label class="control-label"> Email <span class="symbol required"></span></label>
+                                            <input ng-model="restaurantData.email" name="email" type="text" class="form-control" placeholder="Your Email" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                            <span class="error text-small block" ng-if="Form.email.$dirty && Form.email.$invalid">Email is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <legend><h4>Location</h4></legend>
+                                <p>Make it easy for customers to find your restaurant</p>
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="form-group" ng-class="{'has-error':Form.address.$dirty && Form.address.$invalid, 'has-success':Form.address.$valid}">
+                                                    <label class="control-label"> Street Address <span class="symbol required"></span></label>
+                                                    <input name="address" ng-model="restaurantData.address" ng-change="showPosition()" type="text" class="form-control" placeholder="Restaurant Address" ng-pattern="/^([A-Za-z0-9'-\s\.\(\),/]{2,})$/" required>
+                                                    <span class="error text-small block" ng-if="Form.address.$dirty && Form.address.$invalid">Address is required</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="form-group">
+                                                    <label>Address Description (optional)</label>
+                                                    <textarea ng-model="restaurantData.addressDescription" ng-change="lengthControl()" name="description"  placeholder="eg., located in the food court" class="form-control" rows="1" ></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="form-group">
+                                                    <label>&nbsp</label>
+                                                    <span class="clip-select">
+                                                        <select ng-model="restaurantData.selectedAddressOption" name="selectedAddressOption" class="form-control" required>
+                                                            <option ng-repeat="x in addressOptions" value="{{x.shortName}}">{{x.name}}</option>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div map-lazy-load="https://maps.google.com/maps/api/js">
+                                            <!--1600 pennsylvania ave, washington DC-->
+                                            <!--Khreschatyk Street, 25, Kiev, Kyiv city, Ukraine-->
+                                            <!--[50.0, 15.0]-->
+                                            <!--current-location-->
+                                            <ng-map class="google-map" animation="DROP" center="{{position}}" zoom="15" default-style="false" on-center-changed="centreChange()">
+                                                <marker position="{{position}}" on-click="markerClick()"></marker>
+                                            </ng-map>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-white" ng-controller="DatepickerDemoCtrl">
+                            <div class="panel-body" ng-init="checkCurrentItem(timeCell, dt)">
+                                <legend><h4>Opening Hours</h4></legend>
+                                <p>Set your hours, so people know when you're open</p>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <uib-timepicker ng-model="dt" ng-change="checkCurrentItem(timeCell, dt)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+
+                                        <form name="schedule">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Mo</th>
+                                                    <th>Tu</th>
+                                                    <th>Wd</th>
+                                                    <th>Th</th>
+                                                    <th>Fr</th>
+                                                    <th>Sa</th>
+                                                    <th>Su</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>From</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="mo_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[0].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="tu_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[1].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="wd_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[2].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="th_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[3].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="fr_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[4].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="sa_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[5].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="su_from">&nbsp{{restaurantData.openingHours.dailyScheduleList[6].timeFrames[0].fromTime | date:'shortTime' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Till</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="mo_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[0].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="tu_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[1].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="wd_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[2].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="th_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[3].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="fr_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[4].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="sa_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[5].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                    <td><input type="radio" ng-model="timeCell" value="su_till">&nbsp{{restaurantData.openingHours.dailyScheduleList[6].timeFrames[0].tillTime | date:'shortTime' }}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </form>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <legend><h4>Language and Currency</h4></legend>
+                                <p>Select a language and currency to show your menus in</p>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>Language</label>
+                                                <span class="clip-select">
+                                                    <select ng-model="restaurantData.language" name="selectedAddressOption" class="form-control" required>
+                                                        <option ng-repeat="x in languageOptions" value="{{x.shortName}}">{{x.name}}</option>
+                                                    </select>
+                                                </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>Currency</label>
+                                                <span class="clip-select">
+                                                    <select ng-model="restaurantData.currency" name="selectedAddressOption" class="form-control" required>
+                                                        <option ng-repeat="x in currencyOptions" value="{{x.shortName}}">{{x.name}}</option>
+                                                    </select>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-white">
+                            <div class="panel-body">
+                                <!-- <a ui-sref="app.add_restaurant" class="submit-button"></a> -->
+                                <button type="submit"  class="btn btn-btn-default submit-button" ng-click="cancelFunctionality()">Cancel</button>
+                                <!-- <a ui-sref="app.add_restaurant" class="submit-button"></a> -->
+                                    <button type="submit"  class="btn btn-info submit-button" ng-click="addNewRestaurantObject(Form)">Save</button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <!--
+                            <a ui-sref="app.pages.candidatelist" ng-show="newCandidateData.editMode" ng-class="{hide:!newCandidateData.editMode}">
+                                <button ng-click="setEmptyCandidateData()" class="btn btn-btn-default pull-right margin-top-20 margin-right-20">Cancel</button>
+                            </a>
+                            -->
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+    </div>
+</div>

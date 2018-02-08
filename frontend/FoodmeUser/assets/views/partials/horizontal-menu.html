@@ -1,0 +1,43 @@
+
+
+<!-- start: HORIZONTAL MENU -->
+<div class="horizontal-menu-wrapper">
+	<!-- start: NAVBAR HEADER -->
+	<div class="navbar-header" >
+		<button href="javascript:void(0)" class="menu-mobile-toggler btn no-radius pull-left hidden-md hidden-lg" id="horizontal-menu-toggler" ng-click="menuToggle()" v-pressable>
+			<i class="fa fa-bars"></i>
+		</button>
+		<button href="javascript:void(0)" class="sidebar-mobile-toggler btn no-radius pull-left hidden-md hidden-lg" id="sidebar-toggler" ng-click="toggle('sidebar')" v-pressable>
+			<i class="fa fa-bars"></i>
+		</button>
+		<a class="navbar-brand" ui-sref="app.search_for_restaurant"> <img ng-src="{{app.layout.logo}}" alt="{{app.name}}" /> </a>
+		<a class="navbar-brand navbar-brand-collapsed" ui-sref="app.search_for_restaurant"> <img ng-src="{{app.layout.logoCollapsed}}" alt="" /> </a>
+		<button class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" ng-click="navbarCollapsed = !navbarCollapsed" v-pressable>
+			<i ng-class="navbarCollapsed ? 'fa fa-folder' : 'fa fa-folder-open'"></i> <small><i class="fa fa-caret-down margin-left-5"></i></small>
+		</button>
+	</div>
+	<!-- end: NAVBAR HEADER -->
+
+
+
+	<div class="horizontal-nav-container" ct-fullheight="window" data-ct-fullheight-exclusion="header" data-ct-fullheight-if="isSmallDevice">
+		<ul class="nav navbar-nav no-border custom-user-navbar" ng-click="checkValidation()">
+			<li ui-sref-active="active">
+				<a ui-sref="app.search_for_restaurant"> <span translate="sidebar.nav.search_for_restaurant.MAIN"> Search for Restaurant </span> </a>
+			</li>
+		</ul>
+	</div>
+
+
+
+	<!-- start: MENU TOGGLER FOR MOBILE DEVICES -->
+	<div class="close-handle visible-xs-block visible-sm-block menu-toggler" ng-click="menuInit(true)" ng-swipe-up="menuInit(true)">
+		<div class="arrow-left"></div>
+		<div class="arrow-right"></div>
+	</div>
+	<!-- end: MENU TOGGLER FOR MOBILE DEVICES -->
+</div>
+<!-- end: HORIZONTAL MENU -->
+
+
+</div>

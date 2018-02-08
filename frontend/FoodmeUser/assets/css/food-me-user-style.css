@@ -1,0 +1,94 @@
+.hide {
+    display: none;
+}
+.navbar {
+    min-height: 40px !important;
+    background: rgb(52, 52, 52);
+}
+.custom-horizontal-menu {
+    height: 50px !important;
+}
+.custom-user-navbar {
+    min-height: 50px !important;
+    float: right;
+    padding-right: 240px;
+}
+.header-button {
+    position: absolute;
+    top: -50px;
+    margin: 8px;
+    min-width: 80px;
+}
+.get-started-button {
+    right: 30px;
+}
+.sign-in-user-button {
+    right: 30px;
+}
+.sign-in-restaurant-button {
+    right: 165px;
+}
+.header-greeting {
+    position: absolute;
+    top: -40px;
+    right: 50px;
+    margin: 8px;
+}
+.modal-bottom-line {
+    color: #858585;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px;
+}
+.label-link {
+    float: right;
+}
+.modal-title {
+    text-align: center;
+}
+.modal-header p {
+    color: #858585;
+    text-align: center;
+    padding: 10px 20px 0 20px;
+    width: 70%;
+    margin: 0 auto;
+}
+.incorrect-login-message {
+    color: #d60803;
+    text-align: center;
+}
+.footer-data h5 {
+    padding-left: 40px;
+}
+.footer-data {
+    margin: 20px 0 10px 0;
+}
+.footer-data ul {
+    list-style-type: none;
+    line-height: 20px;
+    color: #858585;
+    text-decoration: underline;
+}
+.footer-data a:hover {
+    color: #e46731;
+}
+.search-block {
+    /*margin-top: 100px;*/
+}
+.close {
+    font-size: 30px;
+}
+button.close {
+    padding: 0 4px;
+}
+.modal-body button {
+    width: 100%;
+    margin: 10px 0 !important;
+}
+.reminder {
+    color: #858585;
+}
+.registration-message-modal {
+    margin-top: 70px;
+    margin-bottom: 80px;
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="3 seconds">
+	<contextName>foodme</contextName>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{32} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<jmxConfigurator />
+	<root level="ALL">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<logger name="com" level="WARN" />
+	<logger name="org" level="WARN" />
+	<logger name="javax" level="WARN" />
+	<logger name="springfox" level="WARN" />
+	<!--<logger name="org.springframework.social" level="DEBUG" />-->
+	<!--<logger name="org.springframework.boot" level="INFO" />-->
+	<logger name="org.springframework" level="DEBUG" />
+	<logger name="com.foodme" level="ALL" />
+</configuration>

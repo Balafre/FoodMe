@@ -1,0 +1,21 @@
+<!-- start: BREADCRUMB -->
+<div class="breadcrumb-wrapper">
+    <h4 class="mainTitle no-margin" translate="sidebar.nav.orders.MAIN"> Orders </h4>
+    <div ncy-breadcrumb class="pull-right"></div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: YOUR CONTENT HERE -->
+<div ng-controller="Orders">
+    <div ng-controller="ModalLoginCtrl">
+
+        <div class="container-fluid"><!--ng-controller="homepage"-->
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-info header-button sign-in-restaurant-button" ng-click="open('lg', 'modalPopup.html', 'login')">Sign In</button>
+            </a>
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-primary header-button get-started-button" ng-click="changeModal();open('lg', 'modalPopup.html', 'registration')">Get started</button>
+            </a>
+            <div class="header-greeting" ng-show="validate" ng-class="{hide:!validate}">Hi {{loggedUser}}</div>
+        </div>
+    </div>
+</div>

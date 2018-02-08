@@ -1,0 +1,43 @@
+<!-- start: TOP NAVBAR -->
+<header class="navbar navbar-default navbar-static-top hidden-print" id="topHeader">
+    <!-- start: NAVBAR COLLAPSE -->
+    <div class="navbar-collapse collapse" uib-collapse="navbarCollapsed" ng-init="navbarCollapsed = true" off-click="navbarCollapsed = true" off-click-if='!navbarCollapsed' off-click-filter="'#menu-toggler'">
+        <ul class="nav navbar-left hidden-sm hidden-xs">
+            <li class="sidebar-toggler-wrapper">
+                <div>
+                    <button href="javascript:void(0)" class="btn sidebar-toggler visible-md visible-lg" ng-click="app.layout.isSidebarClosed = !app.layout.isSidebarClosed" v-pressable>
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </li>
+            <li>
+                <a ng-click="goFullscreen()"> <i class="fa fa-expand" ng-show="!isFullscreen"></i> <i class="fa fa-compress" ng-show="isFullscreen"></i></a>
+            </li>
+        </ul>
+        <ul class="nav navbar-right" ct-fullheight="window" data-ct-fullheight-exclusion="header" data-ct-fullheight-if="isSmallDevice">
+            <!-- start: LANGUAGE SWITCHER -->
+            <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href class="dropdown-toggle" uib-dropdown-toggle> <i class="flag-icon" ng-class="'flagstyle'| translate"></i><span>&nbsp;{{language.selected}}</span> </a>
+                <ul role="menu" class="dropdown-menu dropdown-light animated fadeInUpShort ">
+                    <li ng-repeat="(localeId, langName) in language.available">
+                        <a ng-click="language.set(localeId, $event)" href="javascript:void(0)" class="menu-toggler"> {{langName}} </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- end: LANGUAGE SWITCHER -->
+        </ul>
+        <!-- start: MENU TOGGLER FOR MOBILE DEVICES -->
+        <div class="close-handle visible-xs-block menu-toggler" ng-click="navbarCollapsed = true" ng-swipe-up="navbarCollapsed = true">
+            <div class="arrow-left"></div>
+            <div class="arrow-right"></div>
+        </div>
+        <!-- end: MENU TOGGLER FOR MOBILE DEVICES -->
+    </div>
+    <!-- end: NAVBAR COLLAPSE -->
+</header>
+<!-- end: TOP NAVBAR -->
+<!-- start: HORIZONTAL MENU -->
+<div id="bottomHeader" data-ng-include=" 'assets/views/partials/horizontal-menu.html' " class="navbar navbar-default horizontal-menu collapse custom-horizontal-menu" uib-collapse="horizontalNavbarCollapsed" off-click="menuInit(true)" off-click-if='!horizontalNavbarCollapsed' off-click-filter="'#horizontal-menu-toggler'">
+
+</div>
+<!-- end: HORIZONTAL MENU -->

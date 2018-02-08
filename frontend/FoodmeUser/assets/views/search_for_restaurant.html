@@ -1,0 +1,214 @@
+<!-- start: BREADCRUMB -->
+<div class="breadcrumb-wrapper">
+    <h4 class="mainTitle no-margin" translate="sidebar.nav.search_for_restaurant.MAIN">Search For Restaurant</h4>
+    <div ncy-breadcrumb class="pull-right"></div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: YOUR CONTENT HERE -->
+<div ng-controller="SearchForRestaurant">
+    <div ng-controller="ModalLoginCtrl">
+
+        <div class="container-fluid"><!--ng-controller="homepage"-->
+            <a ng-show="!validate" ng-class="{hide:validate}">
+                <button class="btn btn-info header-button sign-in-user-button" ng-click="open('lg', 'modalPopup.html', 'login')">Sign In</button>
+            </a>
+            <div class="header-greeting" ng-show="validate" ng-class="{hide:!validate}">Hi {{loggedUser}}</div>
+        </div>
+
+
+
+        <div class="container-fluid "> <!--container-fullw-->
+
+            <div class="row search-block" ng-style="verticalAlign">
+                <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2"></div>
+                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8">
+                    <div class="form-group"> <!--ng-controller="AutoCompleteCtrl"-->
+                        <label class="control-label"> Ordering from your favorite restaurant is even easier than eating </label>
+                        <input type="text" name="searchApplications" class="form-control" placeholder="Enter name" ng-mouseover="sendSearchApplicationsObject()" ng-focus="catchDataFromMainController()" ng-keydown="checkKeyDown($event)" ng-keyup="checkKeyUp($event)" ng-model="searchApplications[0]" ng-change="search()">
+                        <!--
+                        <ul class="suggestions-list">
+                            <li ng-repeat="suggestion in ApplicationsSuggestions track by $index" ng-class="{active:selectedIndex === $index}" ng-click="AssignValueAndHide($index)">{{suggestion}}</li>
+                        </ul>
+                        -->
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2"></div>
+            </div>
+
+
+
+            <script type="text/ng-template" id="modalPopup.html">
+                <button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+
+                <div ng-show="currentPage === 'login'" ng-class="{hide:currentPage !== 'login'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Sign in with your FoodMe account</h3>
+                    </div>
+
+                    <div class="modal-body">
+                        <form name="FormLogin" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group" ng-class="{'has-error':FormLogin.email.$dirty && FormLogin.email.$invalid, 'has-success':FormLogin.email.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-envelope"></i>
+                                                </div>
+                                                <input ng-model="modalPopup.loginEmail" type="text" name="email" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                            </div>
+                                        <span class="error text-small block" ng-if="FormLogin.email.$dirty && FormLogin.email.$invalid">Email name is required</span>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error':FormLogin.userPassword.$dirty && FormLogin.userPassword.$invalid, 'has-success':FormLogin.userPassword.$valid}">
+                                        <label class="control-label"> Password <span class="symbol required"></span> </label>
+                                        <a class="label-link" ng-click="changeModal(FormLogin, 'updatePassword');clearModal()">Forgot password?</a>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-key"></i>
+                                                </div>
+                                                <input ng-model="modalPopup.loginPassword" type="password" name="userPassword" class="form-control" placeholder="Your password" ng-minlength="6" ng-maxlength="12" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required>
+                                            </div>
+                                        <span class="error text-small block" ng-show="(FormLogin.userPassword.$error.minlength || FormLogin.userPassword.$error.maxlength) && FormLogin.userPassword.$dirty">Passwords must be between 6 and 12 characters.</span>
+                                        <span  class="error text-small block"ng-show="!FormLogin.userPassword.$error.minlength && !FormLogin.userPassword.$error.maxlength && FormLogin.userPassword.$error.pattern && FormLogin.userPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                                        <span class="error text-small block" ng-if="FormLogin.userPassword.$dirty && FormLogin.userPassword.$invalid">Password is required</span>
+                                    </div>
+                                    <button class="btn btn-info" type="submit" ng-click="send(FormLogin)">Sign in</button>
+                                    <button class="btn btn-primary" ng-click="fbLogin()"><i class="fa fa-facebook"></i> &nbsp Sign in with Facebook</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                            <div class="incorrect-login-message" ng-show="errorMessage" ng-class="{hide:!errorMessage}">Your Email or password are not correct!</div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-bottom-line">
+                            Don't have an account? <a ng-click="changeModal(FormLogin, 'registration');clearModal()">Create Your Account</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div ng-show="currentPage === 'updatePassword'" ng-class="{hide:currentPage !== 'updatePassword'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Can't get in?</h3>
+                        <p>Not a problem. Enter your email address below and we'll send you a link to reset your password.</p>
+                    </div>
+
+                    <div class="modal-body">
+                        <form name="FormResendPassword" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="form-group" ng-class="{'has-error':FormResendPassword.recoverPasswordEmail.$dirty && FormResendPassword.recoverPasswordEmail.$invalid, 'has-success':FormResendPassword.recoverPasswordEmail.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.recoverPasswordEmail" type="text" name="recoverPasswordEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="FormResendPassword.recoverPasswordEmail.$dirty && FormResendPassword.recoverPasswordEmail.$invalid">Email name is required</span>
+                                    </div>
+                                    <button class="btn btn-danger" type="submit" ng-click="send(FormResendPassword)">Submit</button>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div ng-show="currentPage === 'registration'" ng-class="{hide:currentPage !== 'registration'}">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Create your account</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div class="modal-body">
+                        <form name="Form" class="form-group" novalidate>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 padding-left-30 padding-right-30">
+                                    <div class="row">
+                                        <div class="col-lg6 col-md-6 col-sm-12 col-xs-12 padding-right-15">
+                                            <div class="form-group" ng-class="{'has-error':Form.firstName.$dirty && Form.firstName.$invalid, 'has-success':Form.firstName.$valid}">
+                                                <label class="control-label"> First Name <span class="symbol required"></span> </label>
+                                                <input ng-model="modalPopup.firstName" type="text" name="firstName" class="form-control" placeholder="password" ng-pattern="/^([A-Za-z\s'-]{2,})$/" required>
+                                                <span class="error text-small block" ng-if="Form.firstName.$dirty && Form.firstName.$invalid">First Name name is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg6 col-md-6 col-sm-12 col-xs-12 padding-left-15">
+                                            <div class="form-group" ng-class="{'has-error':Form.lastName.$dirty && Form.lastName.$invalid, 'has-success':Form.lastName.$valid}">
+                                                <label class="control-label"> Last Name <span class="symbol required"></span> </label>
+                                                <input ng-model="modalPopup.lastName" type="text" name="lastName" class="form-control" placeholder="Your last name" ng-pattern="/^([A-Za-z\s'-]{2,})$/" required>
+                                                <span class="error text-small block" ng-if="Form.lastName.$dirty && Form.lastName.$invalid">Last Name name is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-class="{'has-error':Form.userEmail.$dirty && Form.userEmail.$invalid, 'has-success':Form.userEmail.$valid}">
+                                        <label class="control-label"> Email <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.email" type="text" name="userEmail" class="form-control" placeholder="you@gmail.com" ng-pattern="/^([\w\._-]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}(.[a-zA-Z]{2,6})?)$/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-if="Form.userEmail.$dirty && Form.userEmail.$invalid">Email name is required</span>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error':Form.userPassword.$dirty && Form.userPassword.$invalid, 'has-success':Form.userPassword.$valid}">
+                                        <label class="control-label"> Password <span class="symbol required"></span> </label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.password" type="password" name="userPassword" class="form-control" placeholder="Your password" ng-minlength="6" ng-maxlength="12" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required>
+                                        </div>
+                                        <span class="error text-small block" ng-show="(Form.userPassword.$error.minlength || Form.userPassword.$error.maxlength) && Form.userPassword.$dirty">Passwords must be between 6 and 12 characters.</span>
+                                        <span  class="error text-small block"ng-show="!Form.userPassword.$error.minlength && !Form.userPassword.$error.maxlength && Form.userPassword.$error.pattern && Form.userPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol.)</span>
+                                        <span class="error text-small block" ng-if="Form.userPassword.$dirty && Form.userPassword.$invalid">Password is required</span>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error':Form.userPassword.$dirty && (Form.userPassword.$invalid || (Form.userPassword.$valid && (Form.confirmPassword.$error.noMatch || Form.confirmPassword.$invalid || Form.confirmPassword.$pristine))), 'has-success':!Form.confirmPassword.$error.noMatch && Form.userPassword.$valid && ((Form.confirmPassword.$dirty && Form.userPassword.$dirty) || (Form.confirmPassword.$valid && !Form.userPassword.$dirty)) }"> <!--Form.confirmPassword.$dirty && !Form.confirmPassword.$pristine-->
+                                        <label class="control-label"> Repeat Password <span class="symbol required"></span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <input ng-model="modalPopup.confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Repeat Password" valid-confirm-password required>
+                                        </div>
+                                        <span class="text-small block reminder" ng-show="(Form.confirmPassword.$error.noMatch && !Form.confirmPassword.$dirty) || (Form.confirmPassword.$dirty && Form.confirmPassword.$invalid)">Please confirm your password.</span>
+                                        <span class="error text-small block" ng-show="Form.confirmPassword.$error.noMatch && Form.userPassword.$dirty">Passwords do not match.</span>
+                                    </div>
+                                    <button class="btn btn-info" type="submit" ng-click="send(Form)">Create your account</button> <!--checkValidation()-->
+                                    <button class="btn btn-primary"><i class="fa fa-facebook"></i> &nbsp Sign in with Facebook</button>
+
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-0 col-xs-0"></div>
+                           </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-bottom-line">
+                            Already have an account? <a ng-click="changeModal(Form, 'login');clearModal()">Log in now</a>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div ng-show="currentPage === 'registeredMessage'" ng-class="{hide:currentPage !== 'registeredMessage'}" class="registration-message-modal">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Thank you for your choice?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="modal-title">You was successfully registered. Please confirm your registration by following your email address.</h4>
+                    </div>
+                </div>
+
+
+            </script>
+        </div>
+
+
+    </div>
+</div>

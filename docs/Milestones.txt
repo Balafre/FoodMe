@@ -1,0 +1,1 @@
+Milestones: 1) Initial Setup (deploy template on angular, deploy Spring MVC, configure hibernate, create DB) + homepage; Search for Reastaurant (User app) + My Orders (Admin app for customers and staff); 2) Add Restaurant (User app) +  Menus (Admin app for customers); 3) Super Admin functionality adding (Admin app) + Contact Us (User app) + Delivery.

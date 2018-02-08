@@ -1,0 +1,100 @@
+{
+  "name": "The main restaurant",
+  "description": "Good food",
+  "address": "France, Herouville St-Claire",
+  "addressDescription": "In the city center",
+  "selectedAddressOption": "AFTER_ADDRESS",
+  "geoLocation": {
+    "latitude": 49.20358,
+    "longitude": -0.3336550000000216
+  },
+  "email": "good@food.com",
+  "phoneNumber": "4564545",
+  "faxNumber": "4564545",
+  "openingHours": {
+    "dailyScheduleList": [
+      {
+        "dayOfWeek": "MO",
+        "id": 1,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 1,
+            "tillTime": "18:00"
+          }
+        ]
+      },
+      {
+        "dayOfWeek": "TU",
+        "id": 2,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 2,
+            "tillTime": "18:00"
+          }
+        ]
+      },
+      {
+        "dayOfWeek": "WD",
+        "id": 3,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 3,
+            "tillTime": "18:00"
+          }
+        ]
+      },
+      {
+        "dayOfWeek": "TH",
+        "id": 4,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 4,
+            "tillTime": "18:00"
+          }
+        ]
+      },
+      {
+        "dayOfWeek": "FR",
+        "id": 5,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 5,
+            "tillTime": "18:00"
+          }
+        ]
+      },
+      {
+        "dayOfWeek": "SA",
+        "id": 6,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 6,
+            "tillTime": "18:00"
+          }
+        ]
+      },
+      {
+        "dayOfWeek": "SU",
+        "id": 7,
+        "timeFrames": [
+          {
+            "fromTime": "09:00",
+            "id": 7,
+            "tillTime": "18:00"
+          }
+        ]
+      }
+    ]
+  },
+  "language": "EN",
+  "currency": "USD"
+}
+
+
+{"id":2,"name":"The best edit","description":"Get people excited about your menu and your food. Give your menu a brief description","menuSections":[{"id":4,"name":"A New Section","description":"Get people excited about your menu and your food.","menuSectionPictureUrl":"http://res.cloudinary.com/djark9ail/image/upload/v1466169016/rmnmw6irqdvloqzq0mg8.jpg","dishes":[{"id":7,"name":"A New Dish","description":"Tasty dish.","dishPictureUrl":null,"price":null,"options":{},"availability":"","backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"photo","editDeletePhoto":false,"internalId":0},{"id":8,"name":"A New Dish","description":"Tasty dish.","dishPictureUrl":null,"price":null,"options":{},"availability":"","backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"photo","editDeletePhoto":false,"internalId":1}],"backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"image","editDeletePhoto":false,"internalId":0,"collapsed":false},{"id":5,"name":"A New Section","description":"Get people excited about your menu and your food.","menuSectionPictureUrl":null,"dishes":[{"id":9,"name":"A New Dish","description":"Tasty dish.","dishPictureUrl":null,"price":null,"options":{},"availability":"","backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"photo","editDeletePhoto":false,"internalId":0},{"id":10,"name":"A New Dish","description":"Tasty dish.","dishPictureUrl":null,"price":null,"options":{},"availability":"","backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"photo","editDeletePhoto":false,"internalId":1},{"id":11,"name":"A New Dish","description":"Tasty dish.","dishPictureUrl":null,"price":null,"options":{},"availability":"","backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"photo","editDeletePhoto":false,"internalId":2}],"backupName":"","backupDescription":"","edit":false,"active":false,"addPhoto":"photo","editDeletePhoto":false,"internalId":1,"collapsed":false}],"backupName":"The best","backupDescription":"Get people excited about your menu and your food. Give your menu a brief description","edit":false,"internalId":0,"collapsed":false}
